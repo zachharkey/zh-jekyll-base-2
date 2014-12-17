@@ -7,6 +7,7 @@ var cp          = require('child_process');
 var messages = {
     jekyllBuild: '<span style="color: grey">Running:</span> $ jekyll build'
 };
+var deploy      = require("gulp-gh-pages");
 
 /**
  * Build the Jekyll Site
@@ -56,7 +57,12 @@ gulp.task('sass', function () {
  */
 gulp.task('watch', function () {
     gulp.watch('_scss/*.scss', ['sass']);
-    gulp.watch(['index.html', '_layouts/*.html', '_posts/*'], ['jekyll-rebuild']);
+    gulp.watch(['_config.yml', 'index.html', '_layouts/*.html', '_posts/*'], ['jekyll-rebuild']);
+});
+
+gulp.task("deploy", ["jekyll-build"], function () {
+    return gulp.src("./_site/**/*")
+        .pipe(deploy());
 });
 
 /**
@@ -64,3 +70,5 @@ gulp.task('watch', function () {
  * compile the jekyll site, launch BrowserSync & watch files.
  */
 gulp.task('default', ['browser-sync', 'watch']);
+
+
